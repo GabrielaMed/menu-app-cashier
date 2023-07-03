@@ -5,8 +5,8 @@ type GlobalContextData = {
   setCompanyId: (companyId: string) => void;
   productId: string;
   setProductId: (productId: string) => void;
-  orderDetailedId: string;
-  setOrderDetailedId: (orderDetailedId: string) => void;
+  tableNumber: number;
+  setTableNumber: (tableNumber: number) => void;
 };
 
 export const GlobalContext = createContext({} as GlobalContextData);
@@ -21,7 +21,7 @@ export const GlobalContextProvider = ({ children }: Props) => {
     return storedCompanyId ? storedCompanyId : '';
   });
   const [productId, setProductId] = useState('');
-  const [orderDetailedId, setOrderDetailedId] = useState('');
+  const [tableNumber, setTableNumber] = useState(0);
 
   useEffect(() => {
     localStorage.setItem('companyId', companyId);
@@ -34,8 +34,8 @@ export const GlobalContextProvider = ({ children }: Props) => {
         setCompanyId,
         productId,
         setProductId,
-        orderDetailedId,
-        setOrderDetailedId,
+        tableNumber,
+        setTableNumber,
       }}
     >
       {children}
