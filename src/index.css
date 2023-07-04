@@ -220,3 +220,8 @@ body {
     width: 100%;
   }
 }
+
+
+.rowOrdersCardInfo{
+  --bs-gutter-x: 0px;
+}
