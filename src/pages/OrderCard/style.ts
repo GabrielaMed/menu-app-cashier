@@ -63,3 +63,93 @@ export const CloseButton = styled.button`
   height: 2rem;
   width: 5.5rem;
 `;
+
+export const RowCardInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f3f2f2;
+`;
+
+export const RowOrderInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f3f2f2;
+  }
+`;
+
+export const Order = styled.div`
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e6e5e5;
+  gap: 1rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 390px) {
+    flex-wrap: wrap;
+  }
+`;
+
+export const ImageBox = styled.div`
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  max-height: 3.5rem;
+  border-radius: 5px;
+  overflow: hidden;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+`;
+
+export const OrderInfo = styled.div`
+  width: 12rem;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @media (min-width: 390px) {
+    width: 100%;
+  }
+`;
+
+export const ProductInfo = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const OrderInfoAdditionals = styled.div`
+  width: 100%;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.5rem;
+  span {
+    display: flex;
+    justify-content: space-between;
+  }
+  border-bottom: 1px solid #c4c4c4;
+`;
+
+export const OrderInfoObservation = styled.div`
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: justify;
+`;

@@ -1,16 +1,23 @@
 import { AxiosError } from 'axios';
-import { Header } from '../../components/Header';
 import {
   CloseButton,
   Container,
   Content,
+  ImageBox,
   Navbar,
+  Order,
   OrderCardContainer,
+  OrderInfo,
+  OrderInfoAdditionals,
+  OrderInfoObservation,
+  ProductInfo,
+  RowCardInfo,
+  RowOrderInfo,
 } from './style';
 import { IToastType } from '../../utils/Interface/Toast';
 import { api } from '../../services/api';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../../shared/GlobalContext';
 import ReactLoading from 'react-loading';
 import { ToastMessage } from '../../components/Toast';
@@ -29,6 +36,23 @@ export const OrderCard = () => {
   const { tableNumber, companyId } = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
   const [ordersData, setOrdersData] = useState<IOrder[]>([]);
+  const total = ordersData[0]?.Order_products?.reduce((acc, orderProducts) => {
+    const productTotal =
+      (orderProducts?.product?.price ?? 0) * (orderProducts?.quantity ?? 0);
+
+    const additionalTotal = orderProducts?.additionals
+      ? Object.values(orderProducts.additionals).reduce(
+          (acc, additional) =>
+            acc +
+            (additional?.price
+              ? additional.price * (additional.quantity ?? 0)
+              : 0),
+          0
+        )
+      : 0;
+
+    return acc + productTotal + (additionalTotal ?? 0);
+  }, 0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -110,19 +134,29 @@ export const OrderCard = () => {
           ordersData.map((order, idx) => (
             <Content key={idx}>
               <OrderCardContainer>
-                <Row
-                  className='rowOrdersCardInfo'
-                  style={{
-                    borderBottom: '1px solid #F3F2F2',
-                    paddingBottom: '1rem',
-                  }}
-                >
+                <RowCardInfo>
                   <Row className='rowOrdersCardInfo'>
                     <Col>Mesa: {order.tableNumber}</Col>
-                    <Col>Data: {formatDate(order.Order_card[0].dateTime)}</Col>
+                    <Col
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      Data: {formatDate(order.Order_card[0].dateTime)}
+                    </Col>
                   </Row>
                   <Row className='rowOrdersCardInfo'>
-                    <Col>Total: R$0</Col>
+                    <Col>
+                      Total:{' '}
+                      <strong>
+                        {Number(total).toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        })}
+                      </strong>
+                    </Col>
                   </Row>
                   <Row className='rowOrdersCardInfo'>
                     <Col>Status: {order.Order_card[0].order_card_status}</Col>
@@ -136,7 +170,66 @@ export const OrderCard = () => {
                       <CloseButton>Fechar</CloseButton>
                     </Col>
                   </Row>
-                </Row>
+                </RowCardInfo>
+                {order.Order_products.map((item, idx) => (
+                  <RowOrderInfo>
+                    <Order key={idx}>
+                      {item?.product?.Image ? (
+                        <ImageBox>
+                          <img
+                            src={
+                              process.env.REACT_APP_IMAGE_URL! +
+                              item.product.Image[0].fileName
+                            }
+                            alt=''
+                          />
+                        </ImageBox>
+                      ) : null}
+                      <OrderInfo>
+                        <ProductInfo>
+                          {item.product.name}
+                          <strong>
+                            {Number(
+                              item.quantity * (item?.product?.price ?? 0)
+                            ).toLocaleString('pt-BR', {
+                              style: 'currency',
+                              currency: 'BRL',
+                            })}
+                          </strong>
+                        </ProductInfo>
+                        {(item.additionals?.length ?? 0) > 0 ? (
+                          <OrderInfoAdditionals>
+                            <strong>Adicionais: </strong>
+                            {Array.isArray(item.additionals)
+                              ? item.additionals.map((additional, idx) => (
+                                  <span key={idx}>
+                                    <span>
+                                      {additional.quantity} - {additional.name}
+                                    </span>
+                                    <span>
+                                      {Number(
+                                        (additional.quantity ?? 0) *
+                                          (additional.price ?? 0)
+                                      ).toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL',
+                                      })}
+                                    </span>
+                                  </span>
+                                ))
+                              : null}
+                          </OrderInfoAdditionals>
+                        ) : null}
+
+                        {item.observation ? (
+                          <OrderInfoObservation>
+                            Observação: {item.observation}
+                          </OrderInfoObservation>
+                        ) : null}
+                      </OrderInfo>
+                    </Order>
+                  </RowOrderInfo>
+                ))}
               </OrderCardContainer>
             </Content>
           ))
