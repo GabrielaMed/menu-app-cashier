@@ -102,7 +102,7 @@ export const Home = () => {
       )
     );
 
-    return tableOrders.length > 0 ? '#ff002b' : '#1a7431';
+    return tableOrders.length > 0 ? '#FF2863' : '#52b788';
   };
 
   return (
