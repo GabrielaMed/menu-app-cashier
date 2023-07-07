@@ -101,6 +101,31 @@ export const OrderCard = () => {
     return date.toLocaleTimeString('pt-BR', options);
   };
 
+  const handleCloseOrderCard = async (orderCardId: number) => {
+    try {
+      setLoading(true);
+      const response = await api.post(`orders_card/${orderCardId}/status`, {
+        newStatus: 'fechado',
+      });
+
+      if (response) {
+        setShowToast(true);
+        setToastMessageType(IToastType.success);
+        setToastMessage(`Comanda fechada com sucesso!`);
+
+        setTimeout(() => {
+          navigate(`/`);
+        }, 3000);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setShowToast(true);
+        setToastMessageType(IToastType.error);
+        setToastMessage(`Error: ${err?.response?.data}`);
+      }
+    }
+  };
+
   return (
     <>
       <ToastMessage
@@ -167,7 +192,13 @@ export const OrderCard = () => {
                         justifyContent: 'flex-end',
                       }}
                     >
-                      <CloseButton>Fechar</CloseButton>
+                      <CloseButton
+                        onClick={() =>
+                          handleCloseOrderCard(order.Order_card[0].id)
+                        }
+                      >
+                        Fechar
+                      </CloseButton>
                     </Col>
                   </Row>
                 </RowCardInfo>
@@ -223,7 +254,7 @@ export const OrderCard = () => {
 
                         {item.observation ? (
                           <OrderInfoObservation>
-                            Observação: {item.observation}
+                            <strong>Observação:</strong> {item.observation}
                           </OrderInfoObservation>
                         ) : null}
                       </OrderInfo>
