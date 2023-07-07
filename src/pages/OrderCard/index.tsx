@@ -71,6 +71,7 @@ export const OrderCard = () => {
 
         setLoading(false);
       } catch (err) {
+        setLoading(false);
         if (err instanceof AxiosError) {
           setShowToast(true);
           setToastMessageType(IToastType.error);
