@@ -145,7 +145,6 @@ export const OrderInfoAdditionals = styled.div`
     display: flex;
     justify-content: space-between;
   }
-  border-bottom: 1px solid #c4c4c4;
 `;
 
 export const OrderInfoObservation = styled.div`
